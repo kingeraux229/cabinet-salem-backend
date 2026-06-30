@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { initDb } = require('./db');
+const rendezvousRoutes = require('./routes/rendezvous');
 
 const app = express();
 
@@ -17,11 +18,18 @@ app.use(cors());
 app.use(express.json());
 
 // Une toute première route, juste pour vérifier que le serveur tourne.
+// Quand on ouvrira l'URL du backend dans un navigateur, on doit voir ce
+// message.
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'Backend Cabinet Dentaire Salem actif' });
 });
 
+// Toutes les routes liées aux rendez-vous sont préfixées par /api/rendezvous
+app.use('/api/rendezvous', rendezvousRoutes);
+
 // Railway fournit le port à utiliser via une variable d'environnement.
+// En local ce serait le port 3000, mais Railway choisit lui-même le port
+// réel — d'où process.env.PORT.
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
