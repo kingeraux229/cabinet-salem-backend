@@ -4,6 +4,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const { initDb } = require('./db');
 
 const app = express();
 
@@ -16,17 +17,18 @@ app.use(cors());
 app.use(express.json());
 
 // Une toute première route, juste pour vérifier que le serveur tourne.
-// Quand on ouvrira l'URL du backend dans un navigateur, on doit voir ce
-// message.
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'Backend Cabinet Dentaire Salem actif' });
 });
 
 // Railway fournit le port à utiliser via une variable d'environnement.
-// En local ce serait le port 3000, mais Railway choisit lui-même le port
-// réel — d'où process.env.PORT.
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
+  try {
+    await initDb();
+  } catch (err) {
+    console.error('Erreur lors de l\'initialisation de la base de données :', err.message);
+  }
 });
