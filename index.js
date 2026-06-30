@@ -26,9 +26,13 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
+  console.log('DATABASE_URL définie ?', Boolean(process.env.DATABASE_URL));
   try {
     await initDb();
   } catch (err) {
-    console.error('Erreur lors de l\'initialisation de la base de données :', err.message);
+    console.error('Erreur lors de l\'initialisation de la base de données.');
+    console.error('Message :', err.message);
+    console.error('Code :', err.code);
+    console.error('Stack :', err.stack);
   }
 });
